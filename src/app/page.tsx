@@ -117,7 +117,7 @@ export default function Home() {
   }
 
   // Settings handlers
-  const handleSettingChange = (key: keyof Settings, value: any) => {
+  const handleSettingChange = (key: keyof Settings, value:string | number | boolean) => {
     setPendingSettings((prev) => ({
       ...prev,
       [key]: value,
@@ -183,6 +183,7 @@ export default function Home() {
         description: "Your browser may not support this feature",
         variant: "destructive",
       })
+      console.error(err)
     }
   }
 
@@ -204,7 +205,7 @@ export default function Home() {
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-6">
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
               <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
-                KeyStrokeImagen
+               Realtime Image Generation
               </span>
             </h1>
 
@@ -254,7 +255,7 @@ export default function Home() {
                     <form className="space-y-4">
                       <div>
                         <div className="mb-2 flex items-center justify-between">
-                          <label htmlFor="prompt" className="block text-sm font-medium">
+                          <label htmlFor="prompt" className="block text-sm font-medium text-amber-50">
                             Image Description
                           </label>
                           <Button
@@ -300,7 +301,7 @@ export default function Home() {
                           className="flex cursor-pointer items-center gap-2 text-sm"
                           title="Use earlier images as references for consistency"
                         >
-                          <span>Consistency mode</span>
+                          <span className="text-amber-50">Consistency mode</span>
                           <Switch
                             id="iterative-mode"
                             checked={iterativeMode}

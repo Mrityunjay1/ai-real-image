@@ -2,6 +2,7 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { headers } from "next/headers";
+
 import { NextResponse } from "next/server";
 import Together from "together-ai";
 import { z } from "zod";
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
   if (ratelimit && !userAPIKey) {
     const identifier = getIPAddress();
 
-    const { success } = await ratelimit.limit(identifier);
+    const { success } = await ratelimit.limit(await identifier);
 
     if (!success) {
       return NextResponse.json(
@@ -68,7 +69,6 @@ export async function POST(req: Request) {
       height: 768,
       seed: iterativeMode ? 123 : undefined,
       steps: 3,
-      // @ts-expect-error
       response_format: "base64",
     });
   } catch (e: any) {
@@ -83,13 +83,13 @@ export async function POST(req: Request) {
   return Response.json(response.data[0]);
 }
 
-function getIPAddress() {
+async function getIPAddress() {
   const FALLBACK_IP_ADDRESS = "0.0.0.0";
-  const forwardedFor = headers().get("x-forwarded-for");
+  const forwardedFor = (await headers()).get("x-forwarded-for")
 
   if (forwardedFor) {
     return forwardedFor.split(",")[0] ?? FALLBACK_IP_ADDRESS;
   }
 
-  return headers().get("x-real-ip") ?? FALLBACK_IP_ADDRESS;
+  return (await headers()).get("x-real-ip") ?? FALLBACK_IP_ADDRESS;
 }
